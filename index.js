@@ -64,8 +64,6 @@ class CrowdSimApp {
   }
 }
 
-let cache = [];
-
 class App extends CrowdSimApp {
   currentMillisecond = 0;
   millisecondsBetweenFrames = 40; //40ms between frames, or 25fps
@@ -90,7 +88,7 @@ class App extends CrowdSimApp {
     return { type: "agentDefinitions", agents: JSON.stringify(CrowdSimApp.agents) };
   }
 
-  async tick(newAgents, newDestinations, leavingAgents) {
+  async tick(newAgents, newDestinations, leavingAgents, app) {
     let self = this;
     if (!this.crowd) return;
     let i = this.currentTick++;
@@ -99,10 +97,10 @@ class App extends CrowdSimApp {
       
     }
     for (let agent of newAgents) {
-      CrowdSimApp.agents.push(agent);
+      app.agents.push(agent);
       this.activeAgents.push(agent)
       let start = this.getStart(agent);
-      let idx = this.crowd.addAgent(start, this.getAgentParams(CrowdSimApp.updateFlags));
+      let idx = this.crowd.addAgent(start, this.getAgentParams(app.updateFlags));
       agent.idx = idx;
       let nearest = this.query.findNearestPoly(this.getEnd(agent), this.ext, this.filter);
       this.crowd.requestMoveTarget(agent.idx, nearest.getNearestRef(), nearest.getNearestPos());
@@ -116,7 +114,7 @@ class App extends CrowdSimApp {
     for (let agent of leavingAgents) {
       agent.inSimulation = false;
       this.activeAgents.splice(this.activeAgents.indexOf(agent),1);
-      CrowdSimApp.agents.find(a => a.idx == agent.idx).inSimulation = false;
+      app.agents.find(a => a.idx == agent.idx).inSimulation = false;
       this.crowd.removeAgent(agent.idx);
     }
 
@@ -124,8 +122,8 @@ class App extends CrowdSimApp {
     this.crowd.update(1 / 25.0, null, i);
 
     let toPost = [];
-    for (let a = 0; a < CrowdSimApp.agents.length; a++) {
-      let agent = CrowdSimApp.agents[a];
+    for (let a = 0; a < app.agents.length; a++) {
+      let agent = app.agents[a];
       let toAdd = {
         hasEntered: agent.hasEntered,
         inSimulation: agent.inSimulation,
@@ -163,21 +161,22 @@ async function boot() {
   app = new App(objValue, 10000, locationValue);
   app.boot();
 
-  for (const property in arrivalValue) {
-    app.arrivals.push(arrivalValue[property])
+  console.log(app.arrivals)
+  for (const property in arrivalValue[index]) {
+    app.arrivals.push(arrivalValue[index][property])
   }
-  for (const property in locationValue) {
-    app.locations.push(locationValue[property])
+  for (const property in locationValue[index]) {
+    app.locations.push(locationValue[index][property])
   }
-  await app.tick([], [], []);
+  await app.tick([], [], [], app);
     
   // console.log("        " + app.currentTick)
   console.log(app.currentTick)
   return app.currentTick;
 }
 
-async function doneWithFrame(options, sim) {
-  let end = sim.getEnd();
+async function doneWithFrame(options, app) {
+  let end = app.getEnd();
   let remove = [];
 
   options.agents.forEach(agent => {
@@ -189,19 +188,19 @@ async function doneWithFrame(options, sim) {
         }
   });
 
-  if (sim.arrivals.length == 0 && sim.activeAgents.length == 0) {
+  if (app.arrivals.length == 0 && app.activeAgents.length == 0) {
     // console.log("\nDone with tick callback.")
     // Do nothing, sim is over
   } else {
     let temp = [];
-    sim.arrivals.forEach(newAgent => {
+    app.arrivals.forEach(newAgent => {
       if (newAgent.arrivalTick <= options.frame) {
         temp.push(newAgent)
       }
     })
-    sim.arrivals = sim.arrivals.slice(temp.length);
+    app.arrivals = app.arrivals.slice(temp.length);
 
-    await app.tick(temp, [], remove)
+    await app.tick(temp, [], remove, app)
   }
 }
 
