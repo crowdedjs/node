@@ -2,11 +2,13 @@
 import "./crowded.js"
 
 import assets from "@crowdedjs/assets"
-import fs from "fs"
 
-let objValue = assets.objs.hospital;       //Grab the value of the environment 
-let locationValue = assets.locations.locationsHospital;  //Grab the value of all the locations
-let arrivalValue = assets.arrivals.arrivalHospital;   //Grab the value of all the arrivals
+// let objValue = assets.objs.hospital;       //Grab the value of the environment 
+// let locationValue = assets.locations.locationsHospital;  //Grab the value of all the locations
+// let arrivalValue = assets.arrivals.arrivalHospital;   //Grab the value of all the arrivals
+let objValue = assets.objs.layout;       //Grab the value of the environment 
+let locationValue = assets.locations.locations;  //Grab the value of all the locations
+let arrivalValue = assets.arrivals.arrivals;   //Grab the value of all the arrivals
 
 
 
@@ -150,7 +152,7 @@ class App extends CrowdSimApp {
 
   getEnd(agent) {
     //all agents go to evacuate for now
-    let loc = this.locations.find(l => l.annotationName == "Hospital Entrance")
+    let loc = this.locations.find(l => l.annotationName == "Exit" || l.annotationName == "Main Entrance")
     return [loc.position.x, loc.position.y, loc.position.z]
   }
 }
@@ -168,6 +170,10 @@ async function boot() {
     app.locations.push(locationValue[property])
   }
   await app.tick([], [], []);
+    
+  // console.log("        " + app.currentTick)
+  console.log(app.currentTick)
+  return app.currentTick;
 }
 
 async function doneWithFrame(options, sim) {
@@ -179,13 +185,13 @@ async function doneWithFrame(options, sim) {
     if (options.agents[pos].x > end[0] - 1 && options.agents[pos].x < end[0] + 1)
       if (options.agents[pos].y > end[1] - 1 && options.agents[pos].y < end[1] + 1)
         if (options.agents[pos].z > end[2] - 1 && options.agents[pos].z < end[2] + 1) {
-          console.log(`agent ${agent.id} exiting`)
           remove.push(agent)
         }
   });
 
   if (sim.arrivals.length == 0 && sim.activeAgents.length == 0) {
-    console.log("Done with tick callback.")
+    // console.log("\nDone with tick callback.")
+    // Do nothing, sim is over
   } else {
     let temp = [];
     sim.arrivals.forEach(newAgent => {
@@ -199,4 +205,4 @@ async function doneWithFrame(options, sim) {
   }
 }
 
-export {boot};
+boot()
