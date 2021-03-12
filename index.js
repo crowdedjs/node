@@ -1,12 +1,14 @@
 //importScripts("./crowded.js")
+import { workerData, parentPort } from "worker_threads"
 import "./crowded.js"
-
+// var toRun = process.argv[2];
+var toRun = workerData;
 import assets from "@crowdedjs/assets"
 
 // let objValue = assets.objs.hospital;       //Grab the value of the environment 
 // let locationValue = assets.locations.locationsHospital;  //Grab the value of all the locations
 // let arrivalValue = assets.arrivals.arrivalHospital;   //Grab the value of all the arrivals
-let objValue = assets.objs.layout;       //Grab the value of the environment 
+let objValue = assets.objs.layouts;       //Grab the value of the environment 
 let locationValue = assets.locations.locations;  //Grab the value of all the locations
 let arrivalValue = assets.arrivals.arrivals;   //Grab the value of all the arrivals
 
@@ -25,7 +27,7 @@ class CrowdSimApp {
     | CrowdAgentParams.DT_CROWD_OPTIMIZE_TOPO | CrowdAgentParams.DT_CROWD_OBSTACLE_AVOIDANCE;
   static query;
   crowd;
-  static agents = [];
+  agents = [];
   static ext;
   static filter;
   ap;
@@ -100,7 +102,7 @@ class App extends CrowdSimApp {
       app.agents.push(agent);
       this.activeAgents.push(agent)
       let start = this.getStart(agent);
-      let idx = this.crowd.addAgent(start, this.getAgentParams(app.updateFlags));
+      let idx = this.crowd.addAgent(start, this.getAgentParams(CrowdSimApp.updateFlags));
       agent.idx = idx;
       let nearest = this.query.findNearestPoly(this.getEnd(agent), this.ext, this.filter);
       this.crowd.requestMoveTarget(agent.idx, nearest.getNearestRef(), nearest.getNearestPos());
@@ -155,13 +157,12 @@ class App extends CrowdSimApp {
   }
 }
 
-let app;
 
-async function boot() {
-  app = new App(objValue, 10000, locationValue);
+async function boot(index) {
+  let app = new App(objValue[index], 10000, locationValue[index]);
   app.boot();
 
-  console.log(app.arrivals)
+  console.log(index+1)
   for (const property in arrivalValue[index]) {
     app.arrivals.push(arrivalValue[index][property])
   }
@@ -170,9 +171,10 @@ async function boot() {
   }
   await app.tick([], [], [], app);
     
-  // console.log("        " + app.currentTick)
-  console.log(app.currentTick)
-  return app.currentTick;
+  parentPort.postMessage({
+    layoutNum: index+1,
+    endTick: app.currentTick
+  })
 }
 
 async function doneWithFrame(options, app) {
@@ -204,4 +206,4 @@ async function doneWithFrame(options, app) {
   }
 }
 
-boot()
+boot(toRun)
