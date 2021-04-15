@@ -17,7 +17,7 @@ class PatientAgent extends APatient {
   static index = 0;
   idx; //Corresponds to the internal idx number used by recast
 
-  constructor(agent, location, UUID, severity, arrivalCount) {
+  constructor(agent, location, UUID, severity, arrivalCount, hospital) {
     super(location, UUID, severity, arrivalCount);
 
     this.name = agent.name;
@@ -28,6 +28,7 @@ class PatientAgent extends APatient {
     this.patientName = agent.patientName;
     this.gender = agent.gender;
     this.id = agent.id;
+    this.hospital = hospital;
 
     let startLocation = this.hospital.locations.find(i => i.name == agent.arrivalLocation);
     if (!startLocation) console.error("Bad starting location " + agent.arrivalLocation);
@@ -41,7 +42,7 @@ class PatientAgent extends APatient {
     this.destY = 0;
     this.destZ = 0;
 
-    this.behavior = new patient( agent.id, this.hospital.locations.find(l => l.name == "Check In"));
+    this.behavior = new patient( agent.id, this.hospital.locations.find(l => l.name == "Check In"), this.hospital);
     
       
     }

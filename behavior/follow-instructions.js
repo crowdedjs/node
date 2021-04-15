@@ -26,6 +26,7 @@ class FollowInstructions {
         let simulationAgent = t.crowd.find(f=>f.id == idx);
         let loc = new Vector3(simulationAgent.location.x, simulationAgent.location.y, simulationAgent.location.z);
         let state = me().getPatientTempState();
+        console.log(state)
 
         if (state == PatientTempState.WAITING) {         
           agentConstant.destination = new Vector3(loc.x, loc.y, loc.z);
@@ -61,7 +62,7 @@ class FollowInstructions {
           }
         }
         else if(state == PatientTempState.DONE){
-          //console.log("Done")
+          console.log("Patient Done")
           me().inSimulation = false;
           this.hospital.CTQueue.shift();
           this.hospital.setCTOccupied(false);

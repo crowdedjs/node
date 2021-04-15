@@ -15,11 +15,12 @@ class patient {
 
     const builder = new fluentBehaviorTree.BehaviorTreeBuilder();
     let self = this;//Since we need to reference this in anonymous functions, we need a reference
-    let me = () => this.hospital.agents.find(a => a.id == myIndex);;
+    let me = () => this.hospital.agents.find(a => a.id == myIndex);
     let myGoal = this.hospital.locations.find(l => l.name == "Check In");
     if (!myGoal) throw new Exception("We couldn't find a location called Check In");
 
     // this.goTo = new GoTo(self.index, myGoal.location);
+    console.log("tree")
 
     this.tree = builder
 
@@ -40,6 +41,8 @@ class patient {
       //.splice(new WaitForever(myIndex).tree)
       .end()
       .build();
+    
+      console.log(this.tree)
   }
 
   async update(crowd, msec) {
