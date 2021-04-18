@@ -211,11 +211,14 @@ async function doneWithFrame(options, app) {
     patients.forEach(p => {
         if (!hospital.agentConstants[p.id].inSimulation) {
             remove.push(p)
+            console.log(remove)
         }
     })
 
     if (app.arrivals.length == 0 && patients.length == 0) {
         done(app)
+    } else if (app.currentTick == 15000) {
+        doneFail()
     } else {
         let temp = [];
         app.arrivals.forEach(newAgent => {
@@ -246,6 +249,13 @@ function done(app) {
     parentPort.postMessage({
         layoutNum: toRun + 1,
         endTick: app.currentTick
+    })
+}
+
+function doneFail() {
+    parentPort.postMessage({
+        layoutNum: toRun + 1,
+        endTick: 20000 //basically, toss this layout
     })
 }
 
