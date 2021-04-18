@@ -1,34 +1,38 @@
 class Hospital{
 
-  static agentConstants;
-  static locations;
-  static computer;
-  static comments = [];
-  static CTQueue = [];
-  static activePeople = [];
+  agentConstants;
+  locations;
+  computer;
+  comments = [];
+  CTQueue = [];
+  activePeople = [];
 
-  static CTOccupied = false;
+  CTOccupied = false;
 
-  static getFPS(){return 60;}
-
-  static getCTQueue()
-  {
-    return Hospital.CTQueue;
+  constructor() {
+    
   }
-  static setCTQueue(queue){
-    Hospital.CTQueue = queue;
+
+  getFPS(){return 60;}
+
+  getCTQueue()
+  {
+    return this.CTQueue;
+  }
+  setCTQueue(queue){
+    this.CTQueue = queue;
   }
 
   
 
-  static isCTOccupied(){
-    return Hospital.CTOccupied;
+  isCTOccupied(){
+    return this.CTOccupied;
   }
-  static setCTOccupied(occupied){
-    Hospital.CTOccupied = occupied;
+  setCTOccupied(occupied){
+    this.CTOccupied = occupied;
   }
 
-  static getLocationByName(name){
+  getLocationByName(name){
     return this.locations.find(i=>i.getName() == name);
 
   }

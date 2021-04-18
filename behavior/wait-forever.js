@@ -2,7 +2,7 @@ import fluentBehaviorTree from "@crowdedjs/fluent-behavior-tree"
 import Vector3 from "@crowdedjs/math"
 
 class WaitForever {
-    constructor(myIndex, location, hospital) {
+    constructor(myIndex, hospital) {
         //this.agent = agent;
         this.hospital = hospital;
         this.index = myIndex;

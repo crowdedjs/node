@@ -33,7 +33,6 @@ let locations = []
 let agentConstants = []
 
 locationValue[toRun].forEach(l => {
-    console.log(l.annotationName.toUpperCase().replace(" ", "_"))
     locations.push(new Room(l.position, l.annotationName.toUpperCase().replace(" ", "_"), l.name))
 })
 hospital.locations = locations;
@@ -140,8 +139,8 @@ class App extends CrowdSimApp {
             hospital.agentConstants[agent.id].inSimulation = true;
         }
         for (let agent of newDestinations) {
-            console.log("currenttick: " + this.currentTick)
-            console.log("new destination for " + agent.name + " " + this.getEnd(agent))
+            // console.log("currenttick: " + this.currentTick)
+            // console.log("new destination for " + agent.name + " " + this.getEnd(agent))
 
             if (agent.id !== undefined) {
                 let nearest = this.query.findNearestPoly(this.getEnd(agent), this.ext, this.filter); 
@@ -215,10 +214,6 @@ async function doneWithFrame(options, app) {
         }
     })
 
-    if (app.currentTick % 500 == 0) {
-        console.log("Tick " + app.currentTick)
-        console.log(hospital.agentConstants[0].location)
-    }
     if (app.arrivals.length == 0 && patients.length == 0) {
         done(app)
     } else {
@@ -232,10 +227,6 @@ async function doneWithFrame(options, app) {
 
         for (let j = 0; j < app.activeAgents.length; j++) {
             let agent = hospital.agentConstants[app.activeAgents[j].id]
-            // let agentLocs = [];
-            // hospital.agentConstants.forEach(a => {
-            //     agentLocs.push(a.getLocation())
-            // })
             let oldDestination = agent.destination;
             await agent.behavior.update(hospital.agentConstants, agent.getLocation(), app.currentTick * 1000); //HERE
 

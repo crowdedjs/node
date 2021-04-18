@@ -9,14 +9,14 @@ import ResidentPatientConsult from "./resident-patient-consult.js"
 
 class ResidentResponsibilities extends AResponsibilityFactory {
 
-	get(entry, medicalStaff) {
+	get(entry, medicalStaff, hospital) {
 
 		if (entry.unacknowledged(ACK.RESIDENT_EKG_READ)) 
 			return new ResidentEKGRead(entry, medicalStaff);
 		else if (entry.unacknowledged(ACK.RESIDENT_EKG_CONSULT)) 
 			return new ResidentEKGConsult(entry, medicalStaff);
 		else if (entry.unacknowledged(ACK.RESIDENT_EKG_ORDER_CAT))
-			return new ResidentEKGOrderCAT(entry, medicalStaff);
+			return new ResidentEKGOrderCAT(entry, medicalStaff, hospital);
 		else if (entry.unacknowledged(ACK.RESIDENT_SCAN_READ))
 			return new ResidentScanRead(entry, medicalStaff);
 		else if (entry.unacknowledged(ACK.RESIDENT_ATTENDING_CONSULT))

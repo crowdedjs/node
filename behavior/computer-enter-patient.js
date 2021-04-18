@@ -17,7 +17,6 @@ class ComputerEnterPatient {
                 .do("Enter Patient", (t) => {
                     let patient = me().getCurrentPatient();
                     let entry = new ComputerEntry(patient, "Unknown")
-                    console.log("Entering Patient")
 
                     this.hospital.computer.add(entry);
                     //this.hospital.computer.print();

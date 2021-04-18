@@ -9,14 +9,13 @@ import ACK from "./ack.js"
 
 	
 	 get(entry, medicalStaff, hospital) {
-		if(entry.getVitals() == null) {
+		if (entry.getVitals() == null) {
 			return new TakeVitalsResponsibility( entry, medicalStaff);
-		}
-		else if(entry.getEkg() == null){
+		} else if (entry.getEkg() == null) {
 			return new TechEKGDo(entry, medicalStaff);
-		}else if(hospital.getCTQueue().length > 0 && !hospital.isCTOccupied() && entry.getPatient() == hospital.getCTQueue()[0]) {
+		} else if (hospital.getCTQueue().length > 0 && !hospital.isCTOccupied() && entry.getPatient() == hospital.getCTQueue()[0]) {
 			return new TechEKGTakePatientToResponsibility(entry, medicalStaff, hospital.getLocationByName("CT 1"));
-		}else if(entry.unacknowledged(ACK.CT_PICKUP)) {
+		} else if (entry.unacknowledged(ACK.CT_PICKUP)) {
 			return new TechCATPickupResponsibility(entry, medicalStaff);
 		}
 		

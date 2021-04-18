@@ -7,13 +7,13 @@ class FollowInstructions {
 
   constructor(myIndex, hospital) {
     this.hospital = hospital;
+    this.lastState = -1;
 
     //this.me = agent;
     let me= ()=>this.hospital.agentConstants.find(a=>a.id == myIndex);
     
     this.index = myIndex;
 
-    console.log("we constructin'")
 
     const builder = new fluentBehaviorTree.BehaviorTreeBuilder();
 
@@ -29,7 +29,11 @@ class FollowInstructions {
         let simulationAgent = t.crowd.find(f=>f.id == idx);
         let loc = new Vector3(simulationAgent.location.x, simulationAgent.location.y, simulationAgent.location.z);
         let state = me().getPatientTempState();
-        console.log(state)
+
+        if (this.lastState != state) {
+          console.log(state)
+          this.lastState = state;
+        }
 
         if (state == PatientTempState.WAITING) {         
           agentConstant.destination = new Vector3(loc.x, loc.y, loc.z);

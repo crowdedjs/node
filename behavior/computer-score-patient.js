@@ -17,7 +17,6 @@ class ComputerScorePatient {
         .do("Score Patient", (t) => {
             let patient = me().getCurrentPatient();
             let entry = this.hospital.computer.getEntry(patient);
-            console.log("Scoring Patient")
 
             // get rooms C_ROOM
             // if you get back LocationStatus.NONE then return Running

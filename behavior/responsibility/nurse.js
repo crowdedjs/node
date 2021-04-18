@@ -5,9 +5,7 @@ import ACK from "./ack.js"
 import NurseEscortPatientToExit from "./nurse-escort-patient-to-exit.js"
  class NurseResponsibilities extends AResponsibilityFactory {
 	
-	get(entry, medicalStaff, hospital) {
-		this.hospital = hospital;
-		
+	get(entry, medicalStaff, hospital) {		
 		if(!entry.isAnsweredQuestions()) {
 			return new GetHealthInformationResponsibility( entry, medicalStaff);
 		}
@@ -15,7 +13,7 @@ import NurseEscortPatientToExit from "./nurse-escort-patient-to-exit.js"
 			return new NurseDischargePatient(entry, medicalStaff);
 		}
 		else if(entry.unacknowledged(ACK.NURSE_ESCORT_PATIENT_TO_EXIT)){
-			return new NurseEscortPatientToExit(entry, medicalStaff, this.Hospital);
+			return new NurseEscortPatientToExit(entry, medicalStaff, hospital);
 		}
 		
 		return null;

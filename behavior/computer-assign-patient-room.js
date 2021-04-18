@@ -29,9 +29,7 @@ class ComputerAssignPatientRoom {
         IRoom chosenRoom = cRooms.stream().filter(i->i.getLocationStatus()==LocationStatus.NONE).findFirst().get();
         */
        
-       console.log("Assigning Patient Room")
         let rooms = this.hospital.locations.filter(l => l.roomType == RoomType.C_ROOM && l.locationStatus == LocationStatus.NONE);
-        console.log(this.hospital.locations)
         if (rooms.length == 0) {
           return fluentBehaviorTree.BehaviorTreeStatus.Failure;
         }

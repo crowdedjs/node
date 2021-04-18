@@ -12,6 +12,7 @@ import fluentBehaviorTree from "@crowdedjs/fluent-behavior-tree"
 
 
 class responsibility {
+    hospital;
 
     constructor(myIndex, hospital) {
         this.index = myIndex;

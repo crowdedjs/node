@@ -21,7 +21,7 @@ class GetResponsibility {
                 let I= me();
 
                 let superResponsibilities = this.hospital.computer.entries
-                    .map(i=>{return {entry: i, responsibility:classedResponsibility.get(i, I)}})
+                    .map(i=>{return {entry: i, responsibility:classedResponsibility.get(i, I, this.hospital)}})
                     .filter(i=>{
                         // console.log(i)
                         return i.responsibility!=null && I.hasRoom(i.entry.getBed())}
@@ -29,15 +29,15 @@ class GetResponsibility {
 
                 let responsibilities = this.hospital.computer.entries.filter(
                     i => me().hasRoom(i.getBed()) &&
-                        classedResponsibility.get(i, me()) != null
+                        classedResponsibility.get(i, me(), this.hospital) != null
                 );
                 if (!responsibilities || responsibilities.length == 0)
                     return fluentBehaviorTree.BehaviorTreeStatus.Failure;
-                responsibilities = responsibilities.filter(i=>classedResponsibility.get(i, me()).getSubject != ResponsibilitySubject.COMPUTER)
+                responsibilities = responsibilities.filter(i=>classedResponsibility.get(i, me(), this.hospital).getSubject != ResponsibilitySubject.COMPUTER)
                 if(!responsibilities || responsibilities.length == 0)
                     return fluentBehaviorTree.BehaviorTreeStatus.Failure;
                 let responsibility = responsibilities
-                    .map(i => classedResponsibility.get(i, me()))
+                    .map(i => classedResponsibility.get(i, me(), this.hospital))
                     .reduce((a, b) => a == null ? null : b == null ? a : a.getPriority() < b.getPriority() ? a : b)
 
 

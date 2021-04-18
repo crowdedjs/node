@@ -25,7 +25,6 @@ class LookForArrivingPatient {
         let myLocation = me().location; // last location
 
         let agentConstantPatients = this.hospital.agentConstants.filter(a=>a.name == "patient" && t.crowd.some(t=>t.id==a.id) && a.location);
-        console.log("looking for patient")
         
         let closestPatients = agentConstantPatients
           .sort((a, b) => Vector3.fromObject(a.location).distanceTo(myLocation) - Vector3.fromObject(b.location).distanceTo(myLocation))

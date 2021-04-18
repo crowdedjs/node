@@ -15,7 +15,7 @@ class HandleResponsibility {
 		
                     let responsibility = me().Responsibility;
                     
-                    let timeElapsed = 1.0/this.hospital.getFPS();
+                    let timeElapsed = 1.0/60;
                     
                     if(!responsibility.isStarted()) {
                         //this.hospitalModel.get().addComment(me, null, "Go " + responsibility.Name;

@@ -5,10 +5,10 @@ import ACK from "./ack.js"
 
 class CTResponsibilities extends AResponsibilityFactory{
 
-get(entry, medicalStaff) {
+get(entry, medicalStaff, hospital) {
 
 		if(entry.unacknowledged(ACK.CT_CAT_DO_SCAN)) {
-			this.hospital.setCTOccupied(true);
+			hospital.setCTOccupied(true);
 			return new CTCATDoScanResponsibility(entry, medicalStaff);
 		}
 		

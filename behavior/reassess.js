@@ -29,7 +29,7 @@ class Reassess {
 				let responsibility;
 				if(entry != null){
 				let factory = ResponsibilityFactory.get(me().MedicalStaffSubclass)
-				responsibility = factory.get(entry, me())
+				responsibility = factory.get(entry, me(), this.hospital)
 				}
 				if(entry == null || responsibility == null){
 				me().setCurrentPatient(null);
