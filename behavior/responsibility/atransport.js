@@ -1,6 +1,8 @@
 import AResponsibility from "./aresponsibility.js"
 import ResponsibilitySubject from "./responsibility-subject.js"
 import PatientTempState from "../../support/patient-temp-state.js"
+import Vector3 from "@crowdedjs/math"
+
 
 class ATransportResponsibility extends AResponsibility {
 

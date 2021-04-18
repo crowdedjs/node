@@ -1,12 +1,14 @@
 import ResponsibilityFactory from "./responsibility/responsibility-factory.js";
 import fluentBehaviorTree from "@crowdedjs/fluent-behavior-tree"
+import Vector3 from "@crowdedjs/math"
+
 
 class Reassess {
 	constructor(myIndex, hospital) {
 		this.index = myIndex;
 		this.hospital = hospital;
 		let self = this;
-		let me= ()=>this.hospital.agents.find(a=>a.id == myIndex);;
+		let me= ()=>this.hospital.agentConstants.find(a=>a.id == myIndex);;
 
 		const builder = new fluentBehaviorTree.BehaviorTreeBuilder();
 

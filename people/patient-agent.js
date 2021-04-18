@@ -28,6 +28,7 @@ class PatientAgent extends APatient {
     this.patientName = agent.patientName;
     this.gender = agent.gender;
     this.id = agent.id;
+    this.idx = agent.id;
     this.hospital = hospital;
 
     let startLocation = this.hospital.locations.find(i => i.name == agent.arrivalLocation);
@@ -43,7 +44,7 @@ class PatientAgent extends APatient {
     this.destZ = 0;
 
     this.behavior = new patient( agent.id, this.hospital.locations.find(l => l.name == "Check In"), this.hospital);
-    
+    // this.behavior.update()
       
     }
   

@@ -32,8 +32,8 @@ class MedicalAgent extends AMedicalStaff {
   static index = 0;
   idx; //Corresponds to the internal idx number used by recast
 
-  constructor(agent, hospital) {
-    super(agent.location, agent.id, agent.name, agent.type, agent.doctorYear);
+  constructor(agent, location, hospital) {
+    super(location, agent.id, agent.name, agent.type, agent.doctorYear);
     
     this.name = agent.name;
     this.startMSec = agent.arrivalTick * 25; // We simulate 25 fps
@@ -43,6 +43,7 @@ class MedicalAgent extends AMedicalStaff {
     this.patientName = agent.patientName;
     this.gender = agent.gender;
     this.id = agent.id;
+    this.idx = agent.id;
     this.patientTempState = undefined;
     this.hospital = hospital;
 

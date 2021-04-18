@@ -15,7 +15,7 @@ class nurse {
       this.toReturn = null;
   
       let self = this;//Since we need to reference this in anonymous functions, we need a reference
-      let me= ()=>this.hospital.agents.find(a=>a.id == myIndex);
+      let me= ()=>this.hospital.agentConstants.find(a=>a.id == myIndex);
       
       let goToName = "NursePlace";
       let myGoal = this.hospital.locations.find(l => l.name == goToName);

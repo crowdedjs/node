@@ -1,12 +1,14 @@
 import PatientState from "../support/patient-temp-state.js";
 import fluentBehaviorTree from "@crowdedjs/fluent-behavior-tree"
+import Vector3 from "@crowdedjs/math"
+
 
 
 class LookForArrivingPatient {
   constructor(myIndex, hospital) {
     this.hospital = hospital;
     //this.me = agent;
-    let me= ()=>this.hospital.agents.find(a=>a.id == myIndex);
+    let me= ()=>this.hospital.agentConstants.find(a=>a.id == myIndex);
     this.index = myIndex;
 
 
@@ -19,11 +21,11 @@ class LookForArrivingPatient {
       .sequence("Look For Arriving Patient")
       .do("Look For Arriving Patient", t => {
         // let me = t.agentConstantPatients.find(t.)
-        let agentConstant = this.hospital.agents.find(a => a.id == self.index);
+        let agentConstant = this.hospital.agentConstants.find(a => a.id == self.index);
         let myLocation = me().location; // last location
 
-        let agentConstantPatients = this.hospital.agents.filter(a=>a.name == "patient" && t.crowd.some(t=>t.id==a.id) && a.location);
-        
+        let agentConstantPatients = this.hospital.agentConstants.filter(a=>a.name == "patient" && t.crowd.some(t=>t.id==a.id) && a.location);
+        console.log("looking for patient")
         
         let closestPatients = agentConstantPatients
           .sort((a, b) => Vector3.fromObject(a.location).distanceTo(myLocation) - Vector3.fromObject(b.location).distanceTo(myLocation))

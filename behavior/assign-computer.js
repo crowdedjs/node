@@ -1,4 +1,6 @@
 import fluentBehaviorTree from "@crowdedjs/fluent-behavior-tree"
+import Vector3 from "@crowdedjs/math"
+
 
 class AssignComputer {
     
@@ -16,7 +18,7 @@ class AssignComputer {
           //Set the computer. This is a one-shot behavior since we only want to
           //update the return value once
             .do("Set Computer Location", (t) => {
-              let agent = this.hospital.agents.find(a => a.id == myIndex);
+              let agent = this.hospital.agentConstants.find(a => a.id == myIndex);
 
               agent.Computer =  Vector3.fromObject(this.room)
 

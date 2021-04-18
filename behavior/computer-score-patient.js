@@ -10,13 +10,14 @@ class ComputerScorePatient {
     const builder = new fluentBehaviorTree.BehaviorTreeBuilder();
 
     let self = this;
-    let me= ()=>this.hospital.agents.find(a=>a.id == myIndex);;
+    let me= ()=>this.hospital.agentConstants.find(a=>a.id == myIndex);;
 
     this.tree = builder
       .sequence("Computer Score Patient")
         .do("Score Patient", (t) => {
             let patient = me().getCurrentPatient();
             let entry = this.hospital.computer.getEntry(patient);
+            console.log("Scoring Patient")
 
             // get rooms C_ROOM
             // if you get back LocationStatus.NONE then return Running

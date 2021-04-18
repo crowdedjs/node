@@ -23,7 +23,7 @@ class responsibility {
         let self = this;//Since we need to reference this in anonymous functions, we need a reference
 
         let debug = null;
-        let me = () => this.hospital.agents.find(a => a.id == myIndex);
+        let me = () => this.hospital.agentConstants.find(a => a.id == myIndex);
 
         let goToComputer = new GoToLazy(self.index, () => me().Computer.location, this.hospital).tree;
         let getComputerResponsibility = new GetComputerResponsibility(myIndex, this.hospital).tree;
@@ -42,22 +42,25 @@ class responsibility {
             .do("getRooms", (t) => {               
                 // ADD A ROOM EACH LOOP WITHOUT DELETING, EVERYONE LOOPS, AND LOOPS IN ORDER,
                 // BUT THE TECH NEVER TRANSPORTS MORE THAN ONE PATIENT FOR XRAYS LIKE ABOVE
-                let agent = this.hospital.agents.find(a => a.id == myIndex);
+                let agent = this.hospital.agentConstants.find(a => a.id == myIndex);
                 let roomName = "C1";
 
                 if (i == 1) {
                     agent.addRoom(this.hospital.locations.find(l => l.name == roomName));
                     i++;
                 }
-                else if (i <= 21) {
-                    roomName = "C " + i;
-                    agent.addRoom(this.hospital.locations.find(l => l.name == roomName));
-                    i++;
+                else if (i <= 2) {
+                    roomName = "C" + i;
+                    let room = this.hospital.locations.find(l => l.name == roomName)
+                    if (room !== undefined) {
+                        agent.addRoom(room);
+                        i++;
+                    }
                 }
                 
 
                 // ORIGINAL METHOD: ONLY WORKS FOR ONE PATIENT, DOESN'T LOOP ANYONE
-                //let agent = this.hospital.agents.find(a => a.id == myIndex);
+                //let agent = this.hospital.agentConstants.find(a => a.id == myIndex);
                 //agent.addRoom(this.hospital.locations.find(l => l.name == "C1"));
 
 
@@ -138,7 +141,7 @@ class responsibility {
                     return fluentBehaviorTree.BehaviorTreeStatus.Success;
                 }
                 else if (me().Responsibility.getSubject() == ResponsibilitySubject.ATTENDING) {
-                    location = this.hospital.agents.find(a => a.name == "Attending").location;
+                    location = this.hospital.agentConstants.find(a => a.name == "Attending").location;
                 }
                 else {
                     let patient = me().getCurrentPatient();

@@ -16,7 +16,7 @@ class tech {
     const builder = new fluentBehaviorTree.BehaviorTreeBuilder();
     this.toReturn = null;
     let goToName = "TechPlace";
-    let me= ()=>this.hospital.agents.find(a=>a.id == myIndex);;
+    let me= ()=>this.hospital.agentConstants.find(a=>a.id == myIndex);;
        
     let myGoal = this.hospital.locations.find(l => l.name == goToName);
     if (!myGoal) throw new exception("We couldn't find a location called " + goToName);

@@ -12,7 +12,7 @@ class ComputerAssignPatientRoom {
     const builder = new fluentBehaviorTree.BehaviorTreeBuilder();
 
     let self = this;
-    let me = () => this.hospital.agents.find(a => a.id == myIndex);
+    let me = () => this.hospital.agentConstants.find(a => a.id == myIndex);
 
     this.tree = builder
       .sequence("Computer Assign Patient Room")
@@ -20,6 +20,7 @@ class ComputerAssignPatientRoom {
         let patient = me().getCurrentPatient();
         let entry = this.hospital.computer.getEntry(patient);
 
+        
         // get rooms C_ROOM
         // if you get back LocationStatus.NONE then return Running
         /*List<IRoom> cRooms = this.hospitalModel.get().getLocations(RoomType.C_ROOM);
@@ -27,8 +28,10 @@ class ComputerAssignPatientRoom {
         return Status.RUNNING;//They are all occupied, so we have to wait.
         IRoom chosenRoom = cRooms.stream().filter(i->i.getLocationStatus()==LocationStatus.NONE).findFirst().get();
         */
-
+       
+       console.log("Assigning Patient Room")
         let rooms = this.hospital.locations.filter(l => l.roomType == RoomType.C_ROOM && l.locationStatus == LocationStatus.NONE);
+        console.log(this.hospital.locations)
         if (rooms.length == 0) {
           return fluentBehaviorTree.BehaviorTreeStatus.Failure;
         }

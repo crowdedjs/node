@@ -1,4 +1,6 @@
 import fluentBehaviorTree from "@crowdedjs/fluent-behavior-tree"
+import Vector3 from "@crowdedjs/math"
+
 
 class GoTo {
 
@@ -16,14 +18,14 @@ class GoTo {
       //Set the destination. This is a one-shot behavior since we only want to
       //update the return value once
       .do("Set destination goal", (t) => {
-        let agent = this.hospital.agents.find(a=>a.id==self.index);
+        let agent = this.hospital.agentConstants.find(a=>a.id==self.index);
         agent.destination = new Vector3(self.start.x,self.start.y,self.start.z)
         return fluentBehaviorTree.BehaviorTreeStatus.Success;
       })
       //Now return null as we head to that destination
       //We return running until we're close to it.
       .do("Traveling to goal", (t) => {
-        let agent = this.hospital.agents.find(a=>a.id==self.index);
+        let agent = this.hospital.agentConstants.find(a=>a.id==self.index);
         let frameAgentDetail = t.crowd.find(a=>a.id == self.index);
         agent.destination = new Vector3(self.start.x,self.start.y,self.start.z);
         let simulationAgent = t.crowd.find(a=>a.id == self.index);

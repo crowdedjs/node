@@ -23,7 +23,7 @@ class SubResponsibilty {
     let self = this;//Since we need to reference this in anonymous functions, we need a reference
 
     let debug = null;
-    let me = () => this.hospital.agents.find(a => a.id == myIndex);
+    let me = () => this.hospital.agentConstants.find(a => a.id == myIndex);
 
 
     let goToComputer = new GoToLazy(self.index, () => me().Computer.location, this.hospital).tree;

@@ -31,6 +31,7 @@ class ABehavior {
         let y = position.y;
         let z = position.z;
 
+        console.log(new Vector3(x,y,z))
         this.location = new Vector3(x, y, z);
         this.agents = agents;
         this.positions = positions;

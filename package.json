@@ -11,6 +11,8 @@
   "license": "ISC",
   "type": "module",
   "dependencies": {
-    "@crowdedjs/assets": "^0.1.7"
+    "@crowdedjs/assets": "^0.1.7",
+    "lodash": "^4.17.21",
+    "vite": "^2.1.5"
   }
 }

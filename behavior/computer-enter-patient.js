@@ -8,7 +8,7 @@ class ComputerEnterPatient {
         this.index = myIndex;
         this.hospital = hospital;
         let self = this;
-        let me= ()=>this.hospital.agents.find(a=>a.id == myIndex);;
+        let me= ()=>this.hospital.agentConstants.find(a=>a.id == myIndex);;
 
         const builder = new fluentBehaviorTree.BehaviorTreeBuilder();
 
@@ -17,10 +17,11 @@ class ComputerEnterPatient {
                 .do("Enter Patient", (t) => {
                     let patient = me().getCurrentPatient();
                     let entry = new ComputerEntry(patient, "Unknown")
-                    
+                    console.log("Entering Patient")
+
                     this.hospital.computer.add(entry);
                     //this.hospital.computer.print();
-
+                    
                     return fluentBehaviorTree.BehaviorTreeStatus.Success;
             })
             .end()

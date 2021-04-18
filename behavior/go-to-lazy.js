@@ -1,4 +1,5 @@
 import fluentBehaviorTree from "@crowdedjs/fluent-behavior-tree"
+import Vector3 from "@crowdedjs/math"
 
 class GoToLazy{
 
@@ -16,7 +17,7 @@ class GoToLazy{
       //Set the destination. This is a one-shot behavior since we only want to
       //update the return value once
       .do("Set destination goal lazy", (t) => {
-        let agent = this.hospital.agents.find(a=>a.id==self.index);
+        let agent = this.hospital.agentConstants.find(a=>a.id==self.index);
         let next = self.locationFunction();
         agent.destination = Vector3.fromObject(next)
         return fluentBehaviorTree.BehaviorTreeStatus.Success;
@@ -24,7 +25,8 @@ class GoToLazy{
       //Now return null as we head to that destination
       //We return running until we're close to it.
       .do("Traveling to goal lazy", (t) => {
-        let agent = this.hospital.agents.find(a=>a.id==self.index);
+        let agent = this.hospital.agentConstants.find(a=>a.id==self.index);
+        // console.log(t.crowd.find(a=>a.id == self.index))
         let frameAgentDetail = t.crowd.find(a=>a.id == self.index);
         let next = self.locationFunction();
         

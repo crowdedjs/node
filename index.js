@@ -1,8 +1,9 @@
 import { workerData, parentPort } from "worker_threads"
 import "./crowded.js"
-import assets from "@crowdedjs/assets"
+import assets from "../obj-builder/assets/index.js"
 import Hospital from "./support/hospital.js"
 import Room from "./support/room.js"
+import Computer from "./support/computer.js"
 import PatientAgent from "./people/patient-agent.js"
 import MedicalAgent from "./people/medical-agent.js"
 function VectorEquals(one, two) {
@@ -11,9 +12,9 @@ function VectorEquals(one, two) {
 }
 
 var toRun = workerData;
-let objValue = assets.objs.layouts;       //Grab the value of the environment 
-let locationValue = assets.locations.locations;  //Grab the value of all the locations
-let arrivalValue = assets.arrivals.arrival;
+let objValue = assets.objs;       //Grab the value of the environment 
+let locationValue = assets.locations;  //Grab the value of all the locations
+let arrivalValue = assets.arrivals[0];
 
 
 
@@ -27,19 +28,21 @@ let ObstacleAvoidanceParams = crowded.ObstacleAvoidanceParams;
 //We have to instantiate a hospital and pass it to
 //all the different agents that need it for their info.
 let hospital = new Hospital()
+hospital.computer = new Computer();
 let locations = []
 let agentConstants = []
 
 locationValue[toRun].forEach(l => {
+    console.log(l.annotationName.toUpperCase().replace(" ", "_"))
     locations.push(new Room(l.position, l.annotationName.toUpperCase().replace(" ", "_"), l.name))
 })
 hospital.locations = locations;
 
 arrivalValue.forEach((agent, index) => {
     if (agent.name == "patient")
-        agentConstants.push(new PatientAgent(agent, locationValue, undefined, undefined, undefined, hospital));
+        agentConstants.push(new PatientAgent(agent, locations.find(l => l.name == agent.arrivalLocation).getLocation(), undefined, undefined, undefined, hospital));
     else
-        agentConstants.push(new MedicalAgent(agent, hospital));
+        agentConstants.push(new MedicalAgent(agent, locations.find(l => l.name == agent.arrivalLocation).getLocation(), hospital));
     //Is this line necessary?
     agentConstants[agentConstants.length - 1].setId(index);
 })
@@ -137,8 +140,13 @@ class App extends CrowdSimApp {
             hospital.agentConstants[agent.id].inSimulation = true;
         }
         for (let agent of newDestinations) {
-            let nearest = this.query.findNearestPoly(this.getEnd(agent), this.ext, this.filter);
-            this.crowd.requestMoveTarget(agent.idx, nearest.getNearestRef(), nearest.getNearestPos());
+            console.log("currenttick: " + this.currentTick)
+            console.log("new destination for " + agent.name + " " + this.getEnd(agent))
+
+            if (agent.id !== undefined) {
+                let nearest = this.query.findNearestPoly(this.getEnd(agent), this.ext, this.filter); 
+                this.crowd.requestMoveTarget(agent.idx, nearest.getNearestRef(), nearest.getNearestPos());
+            }
         }
         for (let agent of leavingAgents) {
             agent.inSimulation = false;
@@ -148,7 +156,7 @@ class App extends CrowdSimApp {
             this.crowd.removeAgent(agent.idx);
         }
 
-        this.crowd.update(1 / 25.0, null, i);
+        this.crowd.update(1 / 25.0, null, i * this.millisecondsBetweenFrames);
 
         let toPost = [];
         for (let a = 0; a < app.agents.length; a++) {
@@ -166,6 +174,7 @@ class App extends CrowdSimApp {
                 toAdd.idx = agent.idx;
                 toAdd.id = agent.id;
                 toPost.push(toAdd);
+                hospital.agentConstants[agent.id].location = {x: toAdd.x, y: toAdd.y, z: toAdd.z};
             }
         }
         setTimeout(() => doneWithFrame({ agents: toPost, frame: i }, self), 0)
@@ -183,6 +192,7 @@ class App extends CrowdSimApp {
 
 async function boot(index) {
     let app = new App(objValue[index], 10000, locationValue[index]);
+    // console.trace()
     app.boot();
 
     for (const property in arrivalValue) {
@@ -207,7 +217,7 @@ async function doneWithFrame(options, app) {
 
     if (app.currentTick % 500 == 0) {
         console.log("Tick " + app.currentTick)
-        console.log(options.agents[0])
+        console.log(hospital.agentConstants[0].location)
     }
     if (app.arrivals.length == 0 && patients.length == 0) {
         done(app)
@@ -222,15 +232,16 @@ async function doneWithFrame(options, app) {
 
         for (let j = 0; j < app.activeAgents.length; j++) {
             let agent = hospital.agentConstants[app.activeAgents[j].id]
-            let agentLocs;
-            this.hospital.agentConstants.forEach(a => {
-                agentLocs.push(a.getLocation())
-            })
-            await agent.behavior.update(agentConstants, agentLocs, app.currentTick * 1000); //HERE
+            // let agentLocs = [];
+            // hospital.agentConstants.forEach(a => {
+            //     agentLocs.push(a.getLocation())
+            // })
+            let oldDestination = agent.destination;
+            await agent.behavior.update(hospital.agentConstants, agent.getLocation(), app.currentTick * 1000); //HERE
 
             //If the new destination is not null, send the updated destination to the
             //path finding engine
-            if (this.getEnd(app.activeAgents[j]) != null && !VectorEquals(agent.destination, oldDestination)) {
+            if (app.getEnd(app.activeAgents[j]) != null && !VectorEquals(agent.destination, oldDestination)) {
                 [agent.destX, agent.destY, agent.destZ] = [agent.destination.x, agent.destination.y, agent.destination.z];
                 newDestinations.push(agent);
             }

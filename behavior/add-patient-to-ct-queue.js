@@ -8,7 +8,7 @@ class AssignPatientToCTQueue {
     const builder = new fluentBehaviorTree.BehaviorTreeBuilder();
 
     let self = this;
-    let me = () => this.hospital.agents.find(a => a.id == myIndex);;
+    let me = () => this.hospital.agentConstants.find(a => a.id == myIndex);;
 
     this.tree = builder
       .sequence("Assign Patient To CT Queue")

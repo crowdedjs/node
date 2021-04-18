@@ -70,7 +70,7 @@ class AMedicalStaff extends APerson {
     }
 
 	hasRoom(room) {
-		return this.MyRooms.some(r=>r.name == room.name)	
+		return this.myRooms.some(r=>r.name == room.name)	
 	}
 
 	getCurrentPatient() {

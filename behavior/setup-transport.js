@@ -8,7 +8,7 @@ class SetupTransport {
 		this.index = myIndex;
 		this.hospital = hospital;
 		let self = this;
-		let me= ()=>this.hospital.agents.find(a=>a.id == myIndex);;
+		let me= ()=>this.hospital.agentConstants.find(a=>a.id == myIndex);;
 
 		const builder = new fluentBehaviorTree.BehaviorTreeBuilder();
 

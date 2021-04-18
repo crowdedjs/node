@@ -1,5 +1,7 @@
 import ResponsibilitySubject from "./responsibility/responsibility-subject.js"
 import fluentBehaviorTree from "@crowdedjs/fluent-behavior-tree"
+import Vector3 from "@crowdedjs/math"
+
 
 class GoToResponsibility {
 
@@ -11,7 +13,7 @@ class GoToResponsibility {
     const builder = new fluentBehaviorTree.BehaviorTreeBuilder();
 
     let self = this;//Since we need to reference this in anonymous functions, we need a reference
-    let me = () => this.hospital.agents.find(a => a.id == myIndex);;
+    let me = () => this.hospital.agentConstants.find(a => a.id == myIndex);;
 
     this.tree = builder
       .sequence("Go To Responsibility")
@@ -26,7 +28,7 @@ class GoToResponsibility {
           destination = a;
         }
         else if (me().Responsibility.getSubject() == ResponsibilitySubject.ATTENDING) {
-          destination = this.hospital.agents.find(a => a.name == "Attending").location;
+          destination = this.hospital.agentConstants.find(a => a.name == "Attending").location;
         }
         else {
           if (me().name == "Tech")

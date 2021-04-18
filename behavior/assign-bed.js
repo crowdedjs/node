@@ -1,4 +1,6 @@
 import fluentBehaviorTree from "@crowdedjs/fluent-behavior-tree"
+import Vector3 from "@crowdedjs/math"
+
 class AssignBed {
   constructor(myIndex, bed, hospital) {
     this.index = myIndex;
@@ -19,7 +21,7 @@ class AssignBed {
 
       .sequence("Assign Bed")
       .do("Set Bed Location", (t) => {
-        let agent = this.hospital.agents.find(a => a.id == myIndex);
+        let agent = this.hospital.agentConstants.find(a => a.id == myIndex);
         agent.addRoom(Vector3.fromObject(this.bed));
         //console.log("Assigning bed " + myIndex);
 

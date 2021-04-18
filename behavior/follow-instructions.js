@@ -1,5 +1,7 @@
 import PatientTempState from "../support/patient-temp-state.js";
 import fluentBehaviorTree from "@crowdedjs/fluent-behavior-tree"
+import Vector3 from "@crowdedjs/math"
+
 
 class FollowInstructions {
 
@@ -7,10 +9,11 @@ class FollowInstructions {
     this.hospital = hospital;
 
     //this.me = agent;
-    let me= ()=>this.hospital.agents.find(a=>a.id == myIndex);
+    let me= ()=>this.hospital.agentConstants.find(a=>a.id == myIndex);
     
     this.index = myIndex;
 
+    console.log("we constructin'")
 
     const builder = new fluentBehaviorTree.BehaviorTreeBuilder();
 
@@ -20,9 +23,9 @@ class FollowInstructions {
     this.tree = builder
       .sequence("Follow Instructions")
       .do("Follow Instructions", t => {
-        let agentConstant = this.hospital.agents.find(a => a.id == self.index);
+        let agentConstant = this.hospital.agentConstants.find(a => a.id == self.index);
         
-        let idx = this.hospital.agents[self.index].idx;
+        let idx = this.hospital.agentConstants[self.index].idx;
         let simulationAgent = t.crowd.find(f=>f.id == idx);
         let loc = new Vector3(simulationAgent.location.x, simulationAgent.location.y, simulationAgent.location.z);
         let state = me().getPatientTempState();
