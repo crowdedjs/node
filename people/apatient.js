@@ -17,6 +17,8 @@ class APatient extends APerson {
 	
 	instructor; // AMedicalStaff
 
+	ctRoom = null; //room
+	scan = false; //boolean 
 	/**
 	 * The room that the patient's bed is in.
 	 * Having an assigned room and a permament room 
@@ -62,6 +64,20 @@ class APatient extends APerson {
 
 	setPatientPregnancyState(patientPregnancyState) {
 		this.patientPregnancyState = patientPregnancyState;
+	}
+	
+	setCTRoom(string) {
+		this.ctRoom = string;
+	} 
+	getCTRoom() {
+		return this.ctRoom;
+	}
+	
+	setCATScan(boolean) {
+		this.scan = boolean;
+	}
+	getCATScan() {
+		return this.scan;
 	}
 }
 	

@@ -22,10 +22,8 @@ class GetResponsibility {
 
                 let superResponsibilities = this.hospital.computer.entries
                     .map(i=>{return {entry: i, responsibility:classedResponsibility.get(i, I, this.hospital)}})
-                    .filter(i=>{
-                        // console.log(i)
-                        return i.responsibility!=null && I.hasRoom(i.entry.getBed())}
-                        );
+                    .filter(i=>i.responsibility!=null && I.hasRoom(i.entry.getBed()));
+
 
                 let responsibilities = this.hospital.computer.entries.filter(
                     i => me().hasRoom(i.getBed()) &&

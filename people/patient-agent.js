@@ -21,7 +21,7 @@ class PatientAgent extends APatient {
     super(location, UUID, severity, arrivalCount);
 
     this.name = agent.name;
-     this.startMSec = agent.arrivalTick * 25; // We simulate 25 fps
+    this.startMSec = agent.arrivalTick * 25; // We simulate 25 fps
     this.arrivalLocation = agent.arrivalLocation;
     this.age = agent.age;
     this.severity = agent.severity;
@@ -35,7 +35,7 @@ class PatientAgent extends APatient {
     if (!startLocation) console.error("Bad starting location " + agent.arrivalLocation);
 
 
-    this.startX = startLocation.location.x
+    this.startX = startLocation.location.x;
     this.startY = startLocation.location.y;
     this.startZ = startLocation.location.z;
 
@@ -44,9 +44,10 @@ class PatientAgent extends APatient {
     this.destZ = 0;
 
     this.behavior = new patient( agent.id, this.hospital.locations.find(l => l.name == "Check In"), this.hospital);
-    // this.behavior.update()
-      
-    }
+    if (startLocation == this.hospital.locations.find(l => l.name == "Ambulance Entrance")) {
+      this.behavior = new patient( agent.id, this.hospital.locations.find(l => l.name == "Ambulance Entrance"));
+    }       
+  }
   
 
 

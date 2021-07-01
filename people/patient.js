@@ -15,9 +15,13 @@ class patient {
 
     const builder = new fluentBehaviorTree.BehaviorTreeBuilder();
     let self = this;//Since we need to reference this in anonymous functions, we need a reference
+    let goToName = "Check In";
+    if (this.startLocation.name == "Ambulance Entrance") {
+      goToName = "Ambulance Entrance";
+    }
     let me = () => this.hospital.agentConstants.find(a => a.id == myIndex);
-    let myGoal = this.hospital.locations.find(l => l.name == "Check In");
-    if (!myGoal) throw new Exception("We couldn't find a location called Check In");
+    let myGoal = this.hospital.locations.find(l => l.name == goToName);
+    if (!myGoal) throw new exception("We couldn't find a location called " + goToName);
 
     // this.goTo = new GoTo(self.index, myGoal.location);
 
@@ -25,7 +29,15 @@ class patient {
 
       .sequence("Patient Actions")
       //.selector("Check In")
-      .splice(new GoToLazy(myIndex, () => this.startLocation.location, this.hospital).tree)// CHECK IN
+      .do("Emergency Queue", async function (t) {
+        if (me().emergencyQueue == false && me().getSeverity() == "ESI1") {
+          this.hospital.emergencyQueue.push(me());
+          me().emergencyQueue = true;
+        }
+        
+        return fluentBehaviorTree.BehaviorTreeStatus.Success;
+      })
+      .splice(new GoToLazy(myIndex, () => myGoal.location, this.hospital).tree)// CHECK IN
 
       .splice(new Stop(myIndex, this.hospital).tree)
 

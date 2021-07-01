@@ -21,6 +21,10 @@ class ComputerEntry {
   reg; //String
   ekg; //EKG
   answeredQuestions = false; //bool
+  
+  assignedTech = null; //MedicalStaff
+  assignedResident = null; //MedicalStaff
+  assignedNurse = null; //MedicalStaff
 
 
 
@@ -253,9 +257,32 @@ class ComputerEntry {
 
   }
 
+  setTech(assignedTech) {
+    this.assignedTech = assignedTech;
+    this.change();
+  }
 
+  getTech() {
+    return this.assignedTech;
+  }
 
+  setResident(assignedResident) {
+    this.assignedResident = assignedResident;
+    this.change();
+  }
 
+  getResident() {
+    return this.assignedResident;
+  }
+
+  setNurse(assignedNurse) {
+    this.assignedNurse = assignedNurse;
+    this.change();
+  }
+
+  getNurse() {
+    return this.assignedNurse;
+  }
 }
 
 

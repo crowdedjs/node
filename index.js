@@ -1,21 +1,25 @@
 import { workerData, parentPort } from "worker_threads"
 import "./crowded.js"
-import assets from "../obj-builder/assets/index.js"
+// import assets from "../obj-builder/assets/index.js"
+import assets from "../obj-builder/runs/ML/dataset/index.js"
 import Hospital from "./support/hospital.js"
 import Room from "./support/room.js"
 import Computer from "./support/computer.js"
 import PatientAgent from "./people/patient-agent.js"
 import MedicalAgent from "./people/medical-agent.js"
+
 function VectorEquals(one, two) {
     if (!one || !two) return false;
     return one.x == two.x && one.y == two.y && one.z == two.z;
 }
 
+// var toRun = 0;
 var toRun = workerData;
-let objValue = assets.objs;       //Grab the value of the environment 
-let locationValue = assets.locations;  //Grab the value of all the locations
-let arrivalValue = assets.arrivals[0];
-
+// var vector = workerData[1];
+let objValue = assets.objs[0];       //Grab the value of the environment 
+let locationValue = assets.locations[0];  //Grab the value of all the locations
+// let arrivalValue = assets.arrivals[0];
+let arrivalValue = assets.arrivals[toRun];
 
 
 let CrowdAgentParams = crowded.CrowdAgentParams;
@@ -32,7 +36,7 @@ hospital.computer = new Computer();
 let locations = []
 let agentConstants = []
 
-locationValue[toRun].forEach(l => {
+locationValue.forEach(l => {
     locations.push(new Room(l.position, l.annotationName.toUpperCase().replace(" ", "_"), l.name))
 })
 hospital.locations = locations;
@@ -189,16 +193,16 @@ class App extends CrowdSimApp {
 }
 
 
-async function boot(index) {
-    let app = new App(objValue[index], 10000, locationValue[index]);
+async function boot() {
+    let app = new App(objValue, 10000, locationValue);
     // console.trace()
     app.boot();
 
     for (const property in arrivalValue) {
         app.arrivals.push(arrivalValue[property])
     }
-    for (const property in locationValue[index]) {
-        app.locations.push(locationValue[index][property])
+    for (const property in locationValue) {
+        app.locations.push(locationValue[property])
     }
     await app.tick([], [], [], app);
 }
@@ -208,25 +212,39 @@ async function doneWithFrame(options, app) {
     let newDestinations = [];
     let patients = app.activeAgents.filter(a => a.name == "patient");
 
+    if (app.currentTick % 500 == 0) {
+        console.log("Tick " + app.currentTick + ": " + patients.length)
+    }
     patients.forEach(p => {
         if (!hospital.agentConstants[p.id].inSimulation) {
             remove.push(p)
-            console.log(remove)
         }
     })
 
     if (app.arrivals.length == 0 && patients.length == 0) {
+        console.log(`Exit Simulation #${toRun+1}`)
         done(app)
-    } else if (app.currentTick == 15000) {
+    } else if (app.currentTick == 50000) {
+        patients.forEach(p => {
+            if (hospital.agentConstants[p.id].inSimulation) {
+                console.log(hospital.agentConstants[p.id].location);
+            }
+        })
         doneFail()
     } else {
         let temp = [];
-        app.arrivals.forEach(newAgent => {
+        let newAppArrivals = app.arrivals;
+        app.arrivals.forEach((newAgent, i) => {
             if (newAgent.arrivalTick <= options.frame) {
                 temp.push(newAgent)
+                newAppArrivals = newAppArrivals.filter(a => {
+                    return a != newAgent
+                });
             }
         })
-        app.arrivals = app.arrivals.slice(temp.length);
+        
+        app.arrivals = newAppArrivals;
+
 
         for (let j = 0; j < app.activeAgents.length; j++) {
             let agent = hospital.agentConstants[app.activeAgents[j].id]
@@ -255,9 +273,9 @@ function done(app) {
 function doneFail() {
     parentPort.postMessage({
         layoutNum: toRun + 1,
-        endTick: 20000 //basically, toss this layout
+        endTick: 50000 //basically, toss this layout
     })
 }
 
 
-boot(toRun)
+boot()

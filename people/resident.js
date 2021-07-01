@@ -18,7 +18,7 @@ class resident {
     this.toReturn = null;
 
     let self = this;//Since we need to reference this in anonymous functions, we need a reference
-    let goToName = "ResidentStart";
+    let goToName = "Resident Start";
     let me= ()=>this.hospital.agentConstants.find(a=>a.id == myIndex);;
 
     let myGoal = this.hospital.locations.find(l => l.name == goToName);
@@ -28,8 +28,8 @@ class resident {
     this.tree = builder
       .sequence("Assign")
       .splice(new GoTo(self.index, myGoal.location, this.hospital).tree)
-      .splice(new AssignBed(myIndex, this.hospital.locations.find(l => l.name == "C1").location, this.hospital).tree) // C1
-      .splice(new AssignComputer(myIndex, this.hospital.locations.find(l => l.name == "ResidentStart").location, this.hospital).tree) // ResidentStart
+      .splice(new AssignBed(myIndex, this.hospital.locations.find(l => l.name == "C 1").location, this.hospital).tree) // C1
+      .splice(new AssignComputer(myIndex, this.hospital.locations.find(l => l.name == "Resident Start").location, this.hospital).tree) // ResidentStart
       .splice(new responsibility(myIndex, this.hospital).tree) // lazy: true
 
       .end()

@@ -16,12 +16,12 @@ class tech {
     const builder = new fluentBehaviorTree.BehaviorTreeBuilder();
     this.toReturn = null;
     let goToName = "TechPlace";
-    let me= ()=>this.hospital.agentConstants.find(a=>a.id == myIndex);;
+    let me= ()=>this.hospital.agentConstants.find(a=>a.id == myIndex);
        
     let myGoal = this.hospital.locations.find(l => l.name == goToName);
     if (!myGoal) throw new exception("We couldn't find a location called " + goToName);
     let computer = this.hospital.locations.find(l => l.name == "TechPlace");
-    let assignBed = new AssignBed(myIndex, this.hospital.locations.find(l => l.name == "C1").location, this.hospital).tree
+    let assignBed = new AssignBed(myIndex, this.hospital.locations.find(l => l.name == "C 1").location, this.hospital).tree
     let assignComputer = new AssignComputer(myIndex, computer.location, this.hospital).tree; 
     let assignResponsibility = new responsibility(myIndex, this.hospital).tree;
 

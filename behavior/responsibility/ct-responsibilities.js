@@ -8,7 +8,7 @@ class CTResponsibilities extends AResponsibilityFactory{
 get(entry, medicalStaff, hospital) {
 
 		if(entry.unacknowledged(ACK.CT_CAT_DO_SCAN)) {
-			hospital.setCTOccupied(true);
+			// hospital.setCTOccupied(true);
 			return new CTCATDoScanResponsibility(entry, medicalStaff);
 		}
 		

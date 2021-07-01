@@ -44,14 +44,14 @@ class responsibility {
                 // ADD A ROOM EACH LOOP WITHOUT DELETING, EVERYONE LOOPS, AND LOOPS IN ORDER,
                 // BUT THE TECH NEVER TRANSPORTS MORE THAN ONE PATIENT FOR XRAYS LIKE ABOVE
                 let agent = this.hospital.agentConstants.find(a => a.id == myIndex);
-                let roomName = "C1";
+                let roomName = "C 1";
 
                 if (i == 1) {
                     agent.addRoom(this.hospital.locations.find(l => l.name == roomName));
                     i++;
                 }
-                else if (i <= 2) {
-                    roomName = "C" + i;
+                else if (i <= 21) {
+                    roomName = "C " + i;
                     let room = this.hospital.locations.find(l => l.name == roomName)
                     if (room !== undefined) {
                         agent.addRoom(room);
@@ -78,10 +78,12 @@ class responsibility {
                         me().Computer = this.hospital.locations.find(l => l.name == "NursePlace");
                         break;
                     case "Resident":
-                        me().Computer = this.hospital.locations.find(l => l.name == "ResidentStart");
+                        me().Computer = this.hospital.locations.find(l => l.name == "Resident Start");
                         break;
                     case "CT":
                         me().Computer = this.hospital.locations.find(l => l.name == "CT 1");
+                        if (myIndex == 9)
+                            me().Computer = this.hospital.locations.find(l => l.name == "CT 2");
                         break;
                     case "Radiology":
                         me().Computer = this.hospital.locations.find(l => l.name == "CT 2");

@@ -18,7 +18,11 @@ class ct {
 
     let self = this;//Since we need to reference this in anonymous functions, we need a reference
     let goToName = "CT 1";
-    let me= ()=>this.hospital.agentConstants.find(a=>a.id == myIndex);;
+    if (myIndex == 9) {
+      goToName = "CT 2";
+    }
+   
+    let me= ()=>this.hospital.agentConstants.find(a=>a.id == myIndex);
 
     let myGoal = this.hospital.locations.find(l => l.name == goToName);
     if (!myGoal) throw new exception("We couldn't find a location called " + goToName);
@@ -30,7 +34,7 @@ class ct {
       //.splice(new WaitForever(myIndex).tree)
 
       // original tree is below sequence
-      .splice(new AssignComputer(myIndex, this.hospital.locations.find(l => l.name == "CT 1").location, this.hospital).tree) // name CT 1
+      .splice(new AssignComputer(myIndex, this.hospital.locations.find(l => l.name == goToName).location, this.hospital).tree) // CT 1 or CT 2
       .splice(new responsibility(myIndex, this.hospital).tree) // lazy: true
       
       .end()

@@ -1,4 +1,4 @@
-class Hospital{
+class Hospital {
 
   agentConstants;
   locations;
@@ -7,37 +7,46 @@ class Hospital{
   CTQueue = [];
   activePeople = [];
 
-  CTOccupied = false;
+  CT1Occupied = false;
+  CT2Occupied = false;
+
+  aTeam = [];
+  emergencyQueue = [];
 
   constructor() {
-    
+
   }
 
-  getFPS(){return 60;}
+  getFPS() { return 60; }
 
-  getCTQueue()
-  {
+  getCTQueue() {
     return this.CTQueue;
   }
-  setCTQueue(queue){
+  setCTQueue(queue) {
     this.CTQueue = queue;
   }
 
-  
 
-  isCTOccupied(){
-    return this.CTOccupied;
+
+  isCT1Occupied() {
+    return this.CT1Occupied;
   }
-  setCTOccupied(occupied){
-    this.CTOccupied = occupied;
+  isCT2Occupied() {
+    return this.CT2Occupied;
+  }
+  setCT1Occupied(occupied) {
+    this.CT1Occupied = occupied;
+  }
+  setCT2Occupied(occupied) {
+    this.CT2Occupied = occupied;
   }
 
-  getLocationByName(name){
-    return this.locations.find(i=>i.getName() == name);
+  getLocationByName(name) {
+    return this.locations.find(i => i.getName() == name);
 
   }
 
-  
+
 
 }
 
