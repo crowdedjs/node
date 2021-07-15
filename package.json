@@ -11,6 +11,11 @@
   "license": "ISC",
   "type": "module",
   "dependencies": {
-    "@crowdedjs/assets": "^0.1.7"
+    "@crowdedjs/assets": "^0.1.8",
+    "@crowdedjs/fluent-behavior-tree": "0.0.1",
+    "@crowdedjs/math": "0.0.4",
+    "@crowdedjs/recast-detour": "^0.1.4",
+    "lodash": "^4.17.21",
+    "vite": "^2.4.1"
   }
 }
