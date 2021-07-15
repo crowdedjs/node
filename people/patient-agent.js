@@ -34,7 +34,7 @@ class PatientAgent extends APatient {
     let startLocation = this.hospital.locations.find(i => i.name == agent.arrivalLocation);
     if (!startLocation) console.error("Bad starting location " + agent.arrivalLocation);
 
-
+    
     this.startX = startLocation.location.x;
     this.startY = startLocation.location.y;
     this.startZ = startLocation.location.z;

@@ -7,6 +7,7 @@ import Room from "./support/room.js"
 import Computer from "./support/computer.js"
 import PatientAgent from "./people/patient-agent.js"
 import MedicalAgent from "./people/medical-agent.js"
+import fs from "fs"
 
 function VectorEquals(one, two) {
     if (!one || !two) return false;
@@ -35,6 +36,7 @@ let hospital = new Hospital()
 hospital.computer = new Computer();
 let locations = []
 let agentConstants = []
+let patientSimTimes = [];
 
 locationValue.forEach(l => {
     locations.push(new Room(l.position, l.annotationName.toUpperCase().replace(" ", "_"), l.name))
@@ -133,33 +135,63 @@ class App extends CrowdSimApp {
             app.agents.push(agent);
             this.activeAgents.push(agent)
             let start = this.getStart(agent);
+            //Start = [ x, y, z ] of Main Entrance
             let idx = this.crowd.addAgent(start, this.getAgentParams(CrowdSimApp.updateFlags));
             agent.idx = idx;
+            hospital.idIdxTracker[agent.id] = idx;
+
+            console.log("added agent #" + agent.id)
+            console.log(hospital.idIdxTracker)
+
             let nearest = this.query.findNearestPoly(this.getEnd(agent), this.ext, this.filter);
             this.crowd.requestMoveTarget(agent.idx, nearest.getNearestRef(), nearest.getNearestPos());
             agent.hasEntered = true;
             agent.inSimulation = true;
-            hospital.agentConstants[agent.id].hasEntered = true;
-            hospital.agentConstants[agent.id].inSimulation = true;
+            let agentInConstants = hospital.agentConstants.filter(a => a.id == agent.id)[0]
+            agentInConstants.hasEntered = true;
+            agentInConstants.inSimulation = true;
         }
         for (let agent of newDestinations) {
-            // console.log("currenttick: " + this.currentTick)
-            // console.log("new destination for " + agent.name + " " + this.getEnd(agent))
-
             if (agent.id !== undefined) {
                 let nearest = this.query.findNearestPoly(this.getEnd(agent), this.ext, this.filter); 
-                this.crowd.requestMoveTarget(agent.idx, nearest.getNearestRef(), nearest.getNearestPos());
+                this.crowd.requestMoveTarget(hospital.idIdxTracker[agent.id], nearest.getNearestRef(), nearest.getNearestPos());
             }
         }
         for (let agent of leavingAgents) {
             agent.inSimulation = false;
             this.activeAgents.splice(this.activeAgents.indexOf(agent), 1);
-            app.agents.find(a => a.idx == agent.idx).inSimulation = false;
-            hospital.agentConstants[agent.id].inSimulation = false;
+            app.agents = app.agents.filter(a => a.idx != agent.idx);
+            hospital.agentConstants = hospital.agentConstants.filter(a => a.id != agent.id);
+            // hospital.idIdxTracker.forEach((entry, i) => {
+            //     if (i > agent.id) {
+            //         hospital.idIdxTracker[i] = entry - 1;
+            //         //update agent's idx
+            //     }
+            // })
+            // app.agents.find(a => a.idx == agent.idx).inSimulation = false;
+            // hospital.agentConstants.filter(a => a.id == agent.id)[0].inSimulation = false;
             this.crowd.removeAgent(agent.idx);
+            fs.writeFileSync(this.currentTick + "_debug.txt", JSON.stringify(app.crowd.m_agents, null, '\t'))
         }
 
         this.crowd.update(1 / 25.0, null, i * this.millisecondsBetweenFrames);
+        
+        if (app.currentTick % 250 == 0) {
+            agentConstants.filter(a => a.id > 8).forEach(p => {
+                // console.log(p.id)
+                console.log(p.id + ": " + p.location.x + ", " + p.location.y + ", " + p.location.z)
+                console.log(p.destination)
+            })
+            console.log()
+            console.log(hospital.idIdxTracker)
+            app.agents.forEach(p => {
+                console.log(p.id + " " + p.idx)
+                // console.log(p.id + ": " + p.location.x + ", " + p.location.y + ", " + p.location.z)
+                // console.log(p.destination)
+            })
+
+            console.log()
+        }
 
         let toPost = [];
         for (let a = 0; a < app.agents.length; a++) {
@@ -174,21 +206,21 @@ class App extends CrowdSimApp {
                 toAdd.x = pos[0];
                 toAdd.y = pos[1];
                 toAdd.z = pos[2];
-                toAdd.idx = agent.idx;
                 toAdd.id = agent.id;
+                toAdd.idx = hospital.idIdxTracker[agent.id];
                 toPost.push(toAdd);
-                hospital.agentConstants[agent.id].location = {x: toAdd.x, y: toAdd.y, z: toAdd.z};
+                hospital.agentConstants.filter(a => a.id == agent.id)[0].location = {x: toAdd.x, y: toAdd.y, z: toAdd.z};
             }
         }
         setTimeout(() => doneWithFrame({ agents: toPost, frame: i }, self), 0)
     }
 
     getStart(agent) {
-        return hospital.agentConstants[agent.id].getStart();
+        return hospital.agentConstants.filter(a => a.id == agent.id)[0].getStart();
     }
 
     getEnd(agent) {
-        return hospital.agentConstants[agent.id].getEnd();
+        return hospital.agentConstants.filter(a => a.id == agent.id)[0].getEnd();
     }
 }
 
@@ -212,11 +244,24 @@ async function doneWithFrame(options, app) {
     let newDestinations = [];
     let patients = app.activeAgents.filter(a => a.name == "patient");
 
-    if (app.currentTick % 500 == 0) {
+    if (app.currentTick % 1000 == 0) {
         console.log("Tick " + app.currentTick + ": " + patients.length)
     }
+    if (app.currentTick == 100)
+        fs.writeFileSync("100_debug.txt", JSON.stringify(app.crowd.m_agents, null, '\t'))
+    if (app.currentTick == 7000)
+        fs.writeFileSync("7000_debug.txt", JSON.stringify(app.crowd.m_agents, null, '\t'))
+    if (app.currentTick == 9000)
+        fs.writeFileSync("9000_debug.txt", JSON.stringify(app.crowd.m_agents, null, '\t'))
+    if (app.currentTick == 11000)
+        fs.writeFileSync("11000_debug.txt", JSON.stringify(app.crowd.m_agents, null, '\t'))
+    if (app.currentTick == 15000)
+        fs.writeFileSync("15000_debug.txt", JSON.stringify(app.crowd.m_agents, null, '\t'))
+
     patients.forEach(p => {
-        if (!hospital.agentConstants[p.id].inSimulation) {
+        if (!hospital.agentConstants.filter(a => a.id == p.id)[0].inSimulation) {
+            patientSimTimes.push([p.arrivalTick, app.currentTick])
+            console.log([p.arrivalTick, app.currentTick])
             remove.push(p)
         }
     })
@@ -224,13 +269,6 @@ async function doneWithFrame(options, app) {
     if (app.arrivals.length == 0 && patients.length == 0) {
         console.log(`Exit Simulation #${toRun+1}`)
         done(app)
-    } else if (app.currentTick == 50000) {
-        patients.forEach(p => {
-            if (hospital.agentConstants[p.id].inSimulation) {
-                console.log(hospital.agentConstants[p.id].location);
-            }
-        })
-        doneFail()
     } else {
         let temp = [];
         let newAppArrivals = app.arrivals;
@@ -247,7 +285,7 @@ async function doneWithFrame(options, app) {
 
 
         for (let j = 0; j < app.activeAgents.length; j++) {
-            let agent = hospital.agentConstants[app.activeAgents[j].id]
+            let agent = hospital.agentConstants.filter(a => a.id == app.activeAgents[j].id)[0]
             let oldDestination = agent.destination;
             await agent.behavior.update(hospital.agentConstants, agent.getLocation(), app.currentTick * 1000); //HERE
 
@@ -266,14 +304,7 @@ async function doneWithFrame(options, app) {
 function done(app) {
     parentPort.postMessage({
         layoutNum: toRun + 1,
-        endTick: app.currentTick
-    })
-}
-
-function doneFail() {
-    parentPort.postMessage({
-        layoutNum: toRun + 1,
-        endTick: 50000 //basically, toss this layout
+        simTimes: patientSimTimes
     })
 }
 

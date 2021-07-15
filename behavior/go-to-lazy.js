@@ -25,7 +25,8 @@ class GoToLazy{
 
         // need to make sure the triage nurse stops leaving the patients behind
         if (me().MedicalStaffSubclass == "Triage Nurse") {
-          let simulationAgent = t.crowd.find(a=>a.id == self.index);
+          let simulationAgent = t.crowd[this.hospital.idIdxTracker[self.index]];
+
           let loc = new Vector3(simulationAgent.location.x, simulationAgent.location.y, simulationAgent.location.z);
           let myLocation = loc;
           let myPatient = me().getCurrentPatient();
@@ -42,11 +43,18 @@ class GoToLazy{
       //We return running until we're close to it.
       .do("Traveling to goal lazy", (t) => {
         let agent = this.hospital.agentConstants.find(a=>a.id==self.index);
-        let frameAgentDetail = t.crowd.find(a=>a.id == self.index);
+        let frameAgentDetail = t.crowd[this.hospital.idIdxTracker[self.index]];
         let next = self.locationFunction();
         
         agent.destination = next;
-        let simulationAgent = t.crowd.find(a=>a.id == self.index);
+        let simulationAgent = t.crowd[this.hospital.idIdxTracker[self.index]];
+        // if (this.hospital.idIdxTracker.length > 9) {
+        //   console.log(self.index)
+        //   console.log(this.hospital.idIdxTracker)
+
+        //   // for (let i = 0; i < 10; i++)
+        //   //   console.log(t.crowd[i].id)
+        // }
         let loc = new Vector3(simulationAgent.location.x, simulationAgent.location.y, simulationAgent.location.z);
         let waypoint = Vector3.fromObject(self.locationFunction());
 

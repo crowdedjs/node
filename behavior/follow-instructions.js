@@ -24,10 +24,15 @@ class FollowInstructions {
     this.tree = builder
       .sequence("Follow Instructions")
       .do("Follow Instructions", t => {
+        if (self.index == 11) {
+          console.log(this.hospital.idIdxTracker)
+          console.log(this.hospital.idIdxTracker[self.index])
+          console.log(t.crowd[this.hospital.idIdxTracker[self.index]])
+        }
         let agentConstant = this.hospital.agentConstants.find(a => a.id == self.index);
 
-        let id = this.hospital.agentConstants[self.index].id;
-        let simulationAgent = t.crowd.find(f => f.id == id);
+        // let id = this.hospital.agentConstants[self.index].id;
+        let simulationAgent = t.crowd[this.hospital.idIdxTracker[self.index]];
         let loc = new Vector3(simulationAgent.location.x, simulationAgent.location.y, simulationAgent.location.z);
         let state = me().getPatientTempState();
 

@@ -14,6 +14,7 @@ class Agent {
   idx; //Corresponds to the internal idx number used by recast
 
   constructor(l, hospital) {
+    console.log(index)
     this.hospital = hospital;
 
     let splits = l.split(",");
@@ -40,7 +41,6 @@ class Agent {
       if (behave == "back")
         this.behavior = new BackAndForth(Agent.index++, [this.startX, this.startY, this.startZ], [this.destX, this.destY, this.destZ], this.hospital);
     }
-
 
 
   }

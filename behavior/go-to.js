@@ -26,14 +26,15 @@ class GoTo {
       //We return running until we're close to it.
       .do("Traveling to goal", (t) => {
         let agent = this.hospital.agentConstants.find(a=>a.id==self.index);
-        let frameAgentDetail = t.crowd.find(a=>a.id == self.index);
+        let frameAgentDetail = t.crowd[this.hospital.idIdxTracker[self.index]];
         agent.destination = new Vector3(self.start.x,self.start.y,self.start.z);
-        let simulationAgent = t.crowd.find(a=>a.id == self.index);
+        let simulationAgent = t.crowd[this.hospital.idIdxTracker[self.index]];
         let loc = new Vector3(simulationAgent.location.x, simulationAgent.location.y, simulationAgent.location.z);
         let waypoint = Vector3.fromObject(self.start);
-
+        
         let difference = Vector3.subtract(loc, waypoint)
         let distanceToWaypoint = difference.length();
+        
 
         if (distanceToWaypoint < 2)
         {

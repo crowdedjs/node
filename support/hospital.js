@@ -6,6 +6,7 @@ class Hospital {
   comments = [];
   CTQueue = [];
   activePeople = [];
+  idIdxTracker = []
 
   CT1Occupied = false;
   CT2Occupied = false;

@@ -12,10 +12,10 @@
   "type": "module",
   "dependencies": {
     "@crowdedjs/assets": "^0.1.8",
-    "@crowdedjs/recast-detour": "^0.1.2",
-    "@crowdedjs/math": "0.0.3",
     "@crowdedjs/fluent-behavior-tree": "0.0.1",
+    "@crowdedjs/math": "0.0.4",
+    "@crowdedjs/recast-detour": "^0.1.4",
     "lodash": "^4.17.21",
-    "vite": "^2.3.5"
+    "vite": "^2.4.1"
   }
 }

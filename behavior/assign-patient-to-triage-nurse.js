@@ -18,7 +18,7 @@ class AssignPatientToTriageNurse {
       .sequence("Assign Patient To Triage Nurse")
       .do("Assign Patient", (t) => {
         let agent = this.hospital.agentConstants.find(a => a.id == self.index);
-        let simulationAgent = t.crowd.find(a => a.id == self.index);
+        let simulationAgent = t.crowd[this.hospital.idIdxTracker[self.index]];
         let myLocation = new Vector3(simulationAgent.location.x, simulationAgent.location.y, simulationAgent.location.z);
 
         /*

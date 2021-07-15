@@ -29,7 +29,7 @@ class LookForArrivingPatient {
         let closestPatients = agentConstantPatients
           .sort((a, b) => Vector3.fromObject(a.location).distanceTo(myLocation) - Vector3.fromObject(b.location).distanceTo(myLocation))
 
-          let closeEmergencyPatients = closestPatients.filter(a => a.getSeverity() == "ESI1");
+        let closeEmergencyPatients = closestPatients.filter(a => a.getSeverity() == "ESI1");
         let closestPatient = closestPatients[0] || null;
 
         if (closeEmergencyPatients.length > 0) {

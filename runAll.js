@@ -6,12 +6,12 @@ let finishedData = [];
 
 
 //One Sim
-// runCrowdSim(0)
+runCrowdSim(0)
 
 //All Sims
-for (let i = 0; i < populationLength; i++) {
-    finishedData.push(runCrowdSim(i))
-}
+// for (let i = 0; i < populationLength; i++) {
+//     finishedData.push(runCrowdSim(i))
+// }
 
 Promise.all(finishedData)
     .then(result => {

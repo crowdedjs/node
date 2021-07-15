@@ -13,7 +13,7 @@ class WaitForever {
             .sequence("Wait Forever")
             .do("Wait Forever", (t) => {
                 let agent = this.hospital.agentConstants.find(a => a.id == self.index);
-                let simulationAgent = t.crowd.find(a => a.id == self.index);
+                let simulationAgent = t.crowd[this.hospital.idIdxTracker[self.index]];
                 let loc = new Vector3(simulationAgent.location.x, simulationAgent.location.y, simulationAgent.location.z);
                 agent.destination = new Vector3(loc.x, loc.y, loc.z);
                 simulationAgent.pose = "Idle";
